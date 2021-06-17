@@ -23,16 +23,10 @@ jobs:
           update: true
           path-type: inherit
           install: make
-      - name: Update msys2
-        run: pacman --noconfirm --needed -Syuu
-        continue-on-error: true
-      - name: Update msys2 again
-        run: pacman --noconfirm --needed -Syuu
-        continue-on-error: true
       - name: Install dependencies
         run: >
           pacman --noconfirm --needed -Sy
-          cygutils          
+          cygutils
       - name: run tests
         run: |
           export PATH=`cygpath -m '${{ env.PKG_PC_FILES_DIR }}'`
