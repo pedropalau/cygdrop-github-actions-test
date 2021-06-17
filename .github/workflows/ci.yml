@@ -1,0 +1,47 @@
+name: cygdrop-github-actions-test
+
+on: [push]
+
+jobs:
+  windows:
+    runs-on: windows-2019
+    env:
+      GOPATH: ${{ github.workspace }}
+      REPOSITORY_DIR: ${{ github.workspace }}/src/github.com/${{ github.repository }}
+      GO111MODULE: off
+    defaults:
+      run:
+        working-directory: ${{ env.REPOSITORY_DIR }}
+        shell: msys2 {0}
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+        with:
+          path: ${{ github.workspace }}/src/github.com/${{ github.repository }}
+      - name: Setup msys2
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: true
+          path-type: inherit
+          install: make
+      - name: Update msys2
+        run: pacman --noconfirm --needed -Syuu
+        continue-on-error: true
+      - name: Update msys2 again
+        run: pacman --noconfirm --needed -Syuu
+        continue-on-error: true
+      - name: Install dependencies
+        run: >
+          pacman --noconfirm --needed -Sy
+          cygutils          
+      - name: run tests
+        run: |
+          export PATH=`cygpath -m '${{ env.PKG_PC_FILES_DIR }}'`
+          sh ./scripts/demo.sh "$PATH"
+          PKG_CONFIG_PATH="$PATH:$PKG_CONFIG_PATH" make -C ci/
+        env:
+          DISPLAY: ':99.0'
+          COVERALLS_TOKEN: ${{ secrets.COVERALLS_TOKEN }}
+          RUN_WITH: cygdrop -p Backup -p Restore
+          PKG_PC_FILES_DIR: ${{ env.REPOSITORY_DIR }}/.pkgconfig-pc-files
