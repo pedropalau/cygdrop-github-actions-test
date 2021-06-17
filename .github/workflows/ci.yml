@@ -5,9 +5,11 @@ on: [push]
 jobs:
   windows:
     runs-on: windows-2019
+    env:
+      REPOSITORY_DIR: ${{ github.workspace }}/src/github.com/${{ github.repository }}
     defaults:
       run:
-        working-directory: ${{ github.workspace }}/src/github.com/${{ github.repository }}
+        working-directory: ${{ env.REPOSITORY_DIR }}
         shell: msys2 {0}
     strategy:
       fail-fast: false
@@ -16,7 +18,7 @@ jobs:
       - name: checkout
         uses: actions/checkout@v2
         with:
-          path: ${{ github.workspace }}/src/github.com/${{ github.repository }}
+          path: ${{ env.REPOSITORY_DIR }}
       - name: Setup msys2
         uses: msys2/setup-msys2@v2
         with:
@@ -26,7 +28,7 @@ jobs:
           install: cygutils
       - name: Run tests
         run: |
-          export DEMO=`cygpath -u '${{ github.workspace }}/src/github.com/${{ github.repository }}/.pkgconfig-pc-files'`
+          export DEMO=`cygpath -u '${{ env.REPOSITORY_DIR }}/.pkgconfig-pc-files'`
           sh ./scripts/demo.sh "$DEMO"
         env:
           DISPLAY: ':99.0'
