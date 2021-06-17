@@ -5,11 +5,9 @@ on: [push]
 jobs:
   windows:
     runs-on: windows-2019
-    env:
-      REPOSITORY_DIR: ${{ github.workspace }}/src/github.com/${{ github.repository }}
     defaults:
       run:
-        working-directory: ${{ env.REPOSITORY_DIR }}
+        working-directory: ${{ github.workspace }}/src/github.com/${{ github.repository }}
         shell: msys2 {0}
     strategy:
       fail-fast: false
@@ -28,9 +26,8 @@ jobs:
           install: cygutils
       - name: Run tests
         run: |
-          export PATH=`cygpath -m "${{ env.PKG_PC_FILES_DIR }}"`
+          export PATH=`cygpath --absolute "~/.pkgconfig-pc-files"`
           echo $PATH
         env:
           DISPLAY: ':99.0'
           RUN_WITH: cygdrop -p Backup -p Restore
-          PKG_PC_FILES_DIR: ${{ env.REPOSITORY_DIR }}/.pkgconfig-pc-files
