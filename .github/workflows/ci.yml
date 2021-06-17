@@ -11,6 +11,9 @@ jobs:
       run:
         working-directory: ${{ env.REPOSITORY_DIR }}
         shell: msys2 {0}
+    strategy:
+      fail-fast: false
+    name: Windows Server 2019
     steps:
       - name: checkout
         uses: actions/checkout@v2
@@ -26,11 +29,12 @@ jobs:
       - name: Install dependencies
         run: >
           pacman --noconfirm --needed -Sy
+          mingw-w64-x86_64-nsis
           cygutils
-      - name: run tests
+      - name: Run tests
         run: |
           export PATH=`cygpath -m '${{ env.PKG_PC_FILES_DIR }}'`
-          ./scripts/demo.sh "$PATH"
+          sh ./scripts/demo.sh "$PATH"
         env:
           DISPLAY: ':99.0'
           RUN_WITH: cygdrop -p Backup -p Restore
