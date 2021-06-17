@@ -29,7 +29,7 @@ jobs:
       - name: Run tests
         run: |
           export PATH=`cygpath -m '${{ env.PKG_PC_FILES_DIR }}'`
-          sh ./scripts/demo.sh "$PATH"
+          echo $PATH
         env:
           DISPLAY: ':99.0'
           RUN_WITH: cygdrop -p Backup -p Restore
