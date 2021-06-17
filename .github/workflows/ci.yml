@@ -27,7 +27,7 @@ jobs:
       - name: Run tests
         run: |
           export DEMO=`cygpath --absolute "~/.pkgconfig-pc-files"`
-          sh ./scripts/demo.sh
+          sh ./scripts/demo.sh "$DEMO"
         env:
           DISPLAY: ':99.0'
           RUN_WITH: cygdrop -p Backup -p Restore
