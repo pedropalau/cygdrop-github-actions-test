@@ -26,8 +26,8 @@ jobs:
           install: cygutils
       - name: Run tests
         run: |
-          export PATH=`cygpath --absolute "~/.pkgconfig-pc-files"`
-          echo $PATH
+          export DEMO=`cygpath --absolute "~/.pkgconfig-pc-files"`
+          sh ./scripts/demo.sh
         env:
           DISPLAY: ':99.0'
           RUN_WITH: cygdrop -p Backup -p Restore

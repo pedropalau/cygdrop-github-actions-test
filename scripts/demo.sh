@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-echo "Using PATH: $1"
+echo "Using DEMO: $1"
