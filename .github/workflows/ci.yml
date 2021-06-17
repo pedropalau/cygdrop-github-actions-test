@@ -26,7 +26,7 @@ jobs:
           install: cygutils
       - name: Run tests
         run: |
-          export DEMO=`cygpath --absolute "~/.pkgconfig-pc-files"`
+          export DEMO=`cygpath -m '${{ github.workspace }}/src/github.com/${{ github.repository }}/.pkgconfig-pc-files'`
           sh ./scripts/demo.sh "$DEMO"
         env:
           DISPLAY: ':99.0'
